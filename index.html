@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IMC Calculator</title>
+    <script src="cordova.js"></script>
+    <script>
+        function calcularIMC() {
+            var peso = document.getElementById('peso').value;
+            var altura = document.getElementById('altura').value;
+
+            if (peso === '' || altura === '') {
+                alert('Por favor, preencha peso e altura.');
+                return;
+            }
+
+            // URL da sua API PHP
+            var url = 'https://2ee6223b-28df-4271-a668-c48fda2a6711-00-39p5f57t6t028.kirk.replit.dev/index.php?peso=' + encodeURIComponent(peso) + '&altura=' + encodeURIComponent(altura);
+
+            // Fazer a requisição para a API
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Exibir o resultado na tela
+                    document.getElementById('resultado').innerHTML =
+                        '<p><strong>IMC:</strong> ' + data.imc.toFixed(2) + '</p>' +
+                        '<p><strong>Classificação:</strong> ' + data.classificacao + '</p>' +
+                        '<p><strong>Peso alvo:</strong> ' + data.pesoAlvo.toFixed(2) + ' kg</p>' +
+                        '<p><strong>Diferença de peso:</strong> ' + data.diferencaPeso.toFixed(2) + ' kg</p>';
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Ocorreu um erro ao fazer a requisição.');
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>Calculadora de IMC</h1>
+    <form onsubmit="event.preventDefault(); calcularIMC();">
+        <label for="peso">Peso (kg):</label>
+        <input type="number" id="peso" step="0.1" required><br><br>
+
+        <label for="altura">Altura (m):</label>
+        <input type="number" id="altura" step="0.01" required><br><br>
+
+        <button type="submit">Calcular IMC</button>
+    </form>
+
+    <div id="resultado"></div>
+</body>
+</html>
